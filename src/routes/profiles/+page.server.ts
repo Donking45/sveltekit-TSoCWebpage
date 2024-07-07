@@ -1,6 +1,7 @@
 // import { error } from '@sveltejs/kit';
 import { createPool, sql } from '@vercel/postgres'
 import { POSTGRES_URL } from '$env/static/private'
+console.log(POSTGRES_URL)
 
 export async function load() {
   const db = createPool({ connectionString: POSTGRES_URL })
@@ -8,7 +9,7 @@ export async function load() {
   try {
     const { rows: names } = await db.query('SELECT * FROM names')
     return {
-      names: names,
+      names: names
     }
   } catch (error) {
       console.log(
@@ -64,21 +65,21 @@ async function seed() {
 /** @type {import('./$types').Actions} */
 export const actions = {
 	
-  // update: async ({ request }) => {
-  //   const data = await request.formData();
-  //   const db = createPool({ connectionString: POSTGRES_URL })
-  //   const client = await db.connect();
+  update: async ({ request }) => {
+    const data = await request.formData();
+    const db = createPool({ connectionString: POSTGRES_URL })
+    const client = await db.connect();
 
-  //   const email = data.get('email');
-	// 	const name = data.get('name');
+    const email = data.get('email');
+	 	const name = data.get('name');
 
-  //   const updateUser = await client.sql`
-  //   UPDATE names
-  //   SET email = ${email}, name = ${name}
-  //   WHERE     ;`
+    const updateUser = await client.sql`
+     UPDATE names
+     SET email = ${email}, name = ${name}
+     WHERE  id = ${id};`
 	
-	// 	return { success: true };
-	// },
+	 	return { success: true };
+	 },
 
   delete: async ({ request }) => {
     const data = await request.formData();
