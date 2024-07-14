@@ -71,14 +71,19 @@ export const actions = {
     const client = await db.connect();
 
     const email = data.get('email');
-	 	const name = data.get('name');
+		const name = data.get('name');
+    const id = data.get('id');
+
+    if (typeof email !== 'string' || typeof name !== 'string' || typeof id !== 'string') {
+      return { success: false, error: 'Invalid form data' };
+    }
 
     const updateUser = await client.sql`
      UPDATE names
      SET email = ${email}, name = ${name}
      WHERE  id = ${id};`
 	
-	 	return { success: true };
+	 	            return { success: true };
 	 },
 
   delete: async ({ request }) => {
@@ -86,7 +91,7 @@ export const actions = {
     const db = createPool({ connectionString: POSTGRES_URL })
     const client = await db.connect();
 
-    const id = data.get('id');
+    const id = Number(data.get('id'));
 
     const deleteUser = await client.sql`
     DELETE FROM names
@@ -100,8 +105,8 @@ export const actions = {
     const db = createPool({ connectionString: POSTGRES_URL })
     const client = await db.connect();
 
-    const email = data.get('email');
-		const name = data.get('name');
+    const email = data.get('email')?.toString();
+		const name = data.get('name')?.toString();
 
     const createUser = await client.sql`
       INSERT INTO names (name, email)
